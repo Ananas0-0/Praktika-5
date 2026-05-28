@@ -11,20 +11,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Create venv
         shell: powershell
         run: |
           python -m venv venv
-          .\venv\Scripts\python -m pip install -r requirements.txt
-          .\venv\Scripts\python -m pip install requests
+          .\venv\Scripts\python.exe -m pip install --upgrade pip
+          .\venv\Scripts\python.exe -m pip install -r requirements.txt
+          .\venv\Scripts\python.exe -m pip install requests
 
-      - name: Run app in background
+      - name: Run app
         shell: powershell
         run: |
-          Start-Process -NoNewWindow .\venv\Scripts\python -ArgumentList "src/app/app.py"
-          Start-Sleep -Seconds 2
+          Start-Process -NoNewWindow .\venv\Scripts\python.exe -ArgumentList "src/app/app.py"
+          Start-Sleep -Seconds 3
 
-      - name: Run test
+      - name: Run tests
         shell: powershell
         run: |
-          .\venv\Scripts\python test/test_time.py
+          .\venv\Scripts\python.exe test/test_time.py
