@@ -7,19 +7,24 @@ on:
 jobs:
   test:
     runs-on: self-hosted
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Python
+        shell: powershell
         run: |
           python -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt requests
+          .\venv\Scripts\python -m pip install -r requirements.txt
+          .\venv\Scripts\python -m pip install requests
+
       - name: Run app in background
+        shell: powershell
         run: |
-          source venv/bin/activate
-          python src/app/app.py &
-          sleep 2
+          Start-Process -NoNewWindow .\venv\Scripts\python -ArgumentList "src/app/app.py"
+          Start-Sleep -Seconds 2
+
       - name: Run test
+        shell: powershell
         run: |
-          source venv/bin/activate
-          python test/test_time.py
+          .\venv\Scripts\python test/test_time.py
